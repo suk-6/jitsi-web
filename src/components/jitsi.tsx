@@ -49,18 +49,31 @@ export const JitsiComponent = () => {
 			}}
 			onApiReady={(externalApi: IJitsiMeetExternalApi) => {
 				externalApi.addEventListener("videoConferenceLeft", () =>
-					// 창 닫기
-					window.close()
+					fetch(
+						`${
+							import.meta.env.VITE_API_URL
+						}/room/leave?token=${token}`
+					).then(() =>
+						// 창 닫기
+						window.close()
+					)
 				);
 
-				externalApi.addEventListener(
+				externalApi.on(
 					"videoConferenceJoined",
 					// EventListener 오류로 IDE에서 오류 발생
 					(data: Participant) => {
 						setMyData(data);
+
+						fetch(
+							`${
+								import.meta.env.VITE_API_URL
+							}/join-check?token=${token}`
+						);
+
 						if (
 							externalApi.getNumberOfParticipants() === 1 && // 추후 Low Level API에서 녹화 여부 확인하여 녹화 명령 전송
-							myData?.breakoutRoom === false
+							data.breakoutRoom === false
 						) {
 							externalApi.executeCommand("startRecording", {
 								mode: "file", // Jibri 녹화 진행 (서버사이드 녹화)
@@ -70,8 +83,14 @@ export const JitsiComponent = () => {
 				);
 			}}
 			onReadyToClose={() =>
-				// 창 닫기
-				window.close()
+				fetch(
+					`${
+						import.meta.env.VITE_API_URL
+					}/room/terminate?token=${token}`
+				).then(() =>
+					// 창 닫기
+					window.close()
+				)
 			}
 			getIFrameRef={(iframeRef) => {
 				iframeRef.className = "w-full h-screen";
