@@ -1,5 +1,5 @@
 import { JitsiMeeting } from "@jitsi/react-sdk";
-import { useGetParams } from "../hooks/useGetParams";
+import { useParams } from "../hooks/useParams";
 import { decodeToken } from "../utils/decodeToken";
 import { IJitsiMeetExternalApi } from "@jitsi/react-sdk/lib/types";
 import { Participant } from "../models/participant";
@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 
 export const JitsiComponent = () => {
 	const [myData, setMyData] = useState<Participant | null>(null);
-	const { getParams } = useGetParams();
+	const { getParams } = useParams();
+
 	const token = getParams("token");
 	const tokenData = decodeToken(token);
 
@@ -63,7 +64,7 @@ export const JitsiComponent = () => {
 
 				externalApi.on(
 					"videoConferenceJoined",
-					// EventListener 오류로 IDE에서 오류 발생
+					// EventListener 오류로 IDE에서 타입 에러 발생
 					(data: Participant) => {
 						setMyData(data);
 
@@ -85,14 +86,6 @@ export const JitsiComponent = () => {
 					}
 				);
 			}}
-			onReadyToClose={() =>
-				fetch(
-					`${import.meta.env.VITE_API_URL}/room/terminate?token=${token}`
-				).then(() =>
-					// 창 닫기
-					window.close()
-				)
-			}
 			getIFrameRef={(iframeRef) => {
 				iframeRef.className = "w-full h-screen";
 			}}
