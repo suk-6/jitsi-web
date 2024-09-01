@@ -86,9 +86,7 @@ export const JitsiComponent = () => {
 					}
 				);
 			}}
-			getIFrameRef={(iframeRef) => {
-				iframeRef.className = "w-full h-screen";
-			}}
+			getIFrameRef={(ref) => (ref.className = "w-full h-screen")}
 		/>
 	);
 };
