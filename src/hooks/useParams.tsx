@@ -1,4 +1,4 @@
-export const useGetParams = () => {
+export const useParams = () => {
 	const location = window.location;
 	const searchParams = new URLSearchParams(location.search);
 
