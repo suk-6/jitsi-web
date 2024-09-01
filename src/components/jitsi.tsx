@@ -15,6 +15,10 @@ export const JitsiComponent = () => {
 		console.log(myData);
 	}, [myData]);
 
+	useEffect(() => {
+		document.title = tokenData.room;
+	}, [tokenData.room]);
+
 	return (
 		<JitsiMeeting
 			domain={import.meta.env.VITE_DOMAIN}
@@ -50,9 +54,7 @@ export const JitsiComponent = () => {
 			onApiReady={(externalApi: IJitsiMeetExternalApi) => {
 				externalApi.addEventListener("videoConferenceLeft", () =>
 					fetch(
-						`${
-							import.meta.env.VITE_API_URL
-						}/room/leave?token=${token}`
+						`${import.meta.env.VITE_API_URL}/room/leave?token=${token}`
 					).then(() =>
 						// 창 닫기
 						window.close()
@@ -65,11 +67,12 @@ export const JitsiComponent = () => {
 					(data: Participant) => {
 						setMyData(data);
 
-						fetch(
-							`${
-								import.meta.env.VITE_API_URL
-							}/join-check?token=${token}`
-						);
+						// 추후 유저별 참석 여부를 확인할 때 사용
+						// fetch(
+						// 	`${
+						// 		import.meta.env.VITE_API_URL
+						// 	}/join-check?token=${token}`
+						// );
 
 						if (
 							externalApi.getNumberOfParticipants() === 1 && // 추후 Low Level API에서 녹화 여부 확인하여 녹화 명령 전송
@@ -84,9 +87,7 @@ export const JitsiComponent = () => {
 			}}
 			onReadyToClose={() =>
 				fetch(
-					`${
-						import.meta.env.VITE_API_URL
-					}/room/terminate?token=${token}`
+					`${import.meta.env.VITE_API_URL}/room/terminate?token=${token}`
 				).then(() =>
 					// 창 닫기
 					window.close()
