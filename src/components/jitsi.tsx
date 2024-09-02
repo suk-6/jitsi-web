@@ -22,7 +22,7 @@ export const JitsiComponent = () => {
 
 	return (
 		<JitsiMeeting
-			domain={import.meta.env.VITE_DOMAIN}
+			domain={import.meta.env.VITE_JITSI_DOMAIN}
 			roomName={tokenData.room}
 			jwt={token}
 			configOverwrite={{
